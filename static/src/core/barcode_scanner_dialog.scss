@@ -1,0 +1,186 @@
+/* Barcode Scanner Dialog Styles */
+
+.barcode-scanner-dialog-content {
+    min-height: 400px;
+}
+
+.barcode-scanner-wrapper {
+    width: 100%;
+}
+
+.scanner-preview-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.scanner-preview {
+    width: 100%;
+    min-height: 300px;
+
+    /* Style the html5-qrcode container */
+    video {
+        width: 100% !important;
+        height: auto !important;
+        object-fit: cover;
+    }
+
+    #qr-shaded-region {
+        border-width: 50px !important;
+    }
+}
+
+.scanner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scanner-frame {
+    width: 250px;
+    height: 250px;
+    position: relative;
+
+    /* Corner markers */
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-color: #28a745;
+        border-style: solid;
+    }
+
+    &::before {
+        top: 0;
+        left: 0;
+        border-width: 3px 0 0 3px;
+    }
+
+    &::after {
+        top: 0;
+        right: 0;
+        border-width: 3px 3px 0 0;
+    }
+}
+
+/* Additional corner markers using pseudo-elements on inner div */
+.scanner-frame .scanner-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #28a745, transparent);
+    animation: scan-line 2s ease-in-out infinite;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-color: #28a745;
+        border-style: solid;
+    }
+
+    &::before {
+        bottom: -248px;
+        left: 0;
+        border-width: 0 0 3px 3px;
+    }
+
+    &::after {
+        bottom: -248px;
+        right: 0;
+        border-width: 0 3px 3px 0;
+    }
+}
+
+@keyframes scan-line {
+    0%, 100% {
+        top: 0;
+    }
+    50% {
+        top: 248px;
+    }
+}
+
+.scanner-controls {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.scanner-instructions {
+    padding: 10px;
+    background: #f0f0f0;
+    border-radius: 4px;
+
+    p {
+        margin-bottom: 0.25rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/* Camera selector dropdown styling */
+.camera-selector {
+    max-width: 200px;
+}
+
+/* Mobile optimizations */
+@media (max-width: 576px) {
+    .barcode-scanner-dialog-content {
+        min-height: 350px;
+    }
+
+    .scanner-preview-container {
+        max-width: 100%;
+    }
+
+    .scanner-frame {
+        width: 200px;
+        height: 200px;
+    }
+
+    .scanner-frame .scanner-line {
+        &::before,
+        &::after {
+            bottom: -198px;
+        }
+    }
+
+    @keyframes scan-line {
+        0%, 100% {
+            top: 0;
+        }
+        50% {
+            top: 198px;
+        }
+    }
+}
+
+/* Dark mode support */
+.o_dark_mode {
+    .scanner-controls {
+        background: #2d2d2d;
+    }
+
+    .scanner-instructions {
+        background: #1a1a1a;
+    }
+}

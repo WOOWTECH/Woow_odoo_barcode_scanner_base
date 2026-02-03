@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="barcode_scanner_base.ScannerDialog">
+        <Dialog title="props.title" size="'md'" contentClass="'barcode-scanner-dialog-content'">
+            <div class="barcode-scanner-wrapper">
+                <!-- Error Message -->
+                <t t-if="state.error">
+                    <div class="alert alert-danger mb-3" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <span t-esc="state.error"/>
+                    </div>
+                </t>
+
+                <!-- Loading State -->
+                <t t-if="state.isInitializing">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="text-muted">Initializing camera...</p>
+                    </div>
+                </t>
+
+                <!-- Scanner Container -->
+                <div t-att-class="{'d-none': state.isInitializing || state.error}">
+                    <!-- Camera Preview -->
+                    <div class="scanner-preview-container mb-3">
+                        <div id="barcode-scanner-container" class="scanner-preview"/>
+
+                        <!-- Scanning Indicator -->
+                        <t t-if="state.isScanning">
+                            <div class="scanner-overlay">
+                                <div class="scanner-frame">
+                                    <div class="scanner-line"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Camera Controls -->
+                    <div class="scanner-controls d-flex justify-content-between align-items-center mb-3">
+                        <div class="camera-info">
+                            <small class="text-muted">
+                                <i class="fa fa-video-camera me-1"/>
+                                <span t-esc="currentCameraLabel"/>
+                            </small>
+                        </div>
+
+                        <t t-if="hasMultipleCameras">
+                            <button type="button"
+                                    class="btn btn-outline-secondary btn-sm"
+                                    t-on-click="toggleCamera"
+                                    title="Switch Camera">
+                                <i class="fa fa-refresh me-1"/>
+                                Switch Camera
+                            </button>
+                        </t>
+                    </div>
+
+                    <!-- Last Scanned Info -->
+                    <t t-if="state.lastScanned">
+                        <div class="alert alert-success mb-3">
+                            <i class="fa fa-check-circle me-2"/>
+                            <strong>Last scanned:</strong>
+                            <span t-esc="state.lastScanned" class="ms-1 font-monospace"/>
+                        </div>
+                    </t>
+
+                    <!-- Instructions -->
+                    <div class="scanner-instructions text-center text-muted small">
+                        <p class="mb-1">
+                            <i class="fa fa-info-circle me-1"/>
+                            Position the barcode or QR code within the frame
+                        </p>
+                        <p class="mb-0">
+                            Supported: EAN-13, EAN-8, UPC-A, UPC-E, Code 128, Code 39, QR Code
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dialog Footer -->
+                <div class="d-flex justify-content-end mt-3 pt-3 border-top">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            t-on-click="onCloseClick">
+                        <i class="fa fa-times me-1"/>
+                        Close
+                    </button>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

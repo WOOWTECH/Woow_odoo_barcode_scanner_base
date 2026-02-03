@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Barcode Scanner Settings -->
+    <!-- Settings are configured through the res.config.settings model -->
+    <!-- The fields are defined in models/res_config_settings.py -->
+
+    <!-- Note: The actual settings UI integration depends on which apps are installed -->
+    <!-- Users can access barcode settings through the individual module configurations -->
+</odoo>
