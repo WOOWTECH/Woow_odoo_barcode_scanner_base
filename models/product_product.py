@@ -18,8 +18,18 @@ class ProductProduct(models.Model):
 
     @api.depends('barcode_ids')
     def _compute_barcode_count(self):
+        """Compute barcode count using read_group for efficiency."""
+        if not self.ids:
+            return
+        # Use read_group for efficient counting (avoids N+1 queries)
+        barcode_data = self.env['product.barcode'].read_group(
+            [('product_id', 'in', self.ids)],
+            ['product_id'],
+            ['product_id']
+        )
+        counts = {data['product_id'][0]: data['product_id_count'] for data in barcode_data}
         for product in self:
-            product.barcode_count = len(product.barcode_ids)
+            product.barcode_count = counts.get(product.id, 0)
 
     @api.model
     def find_by_barcode(self, barcode, company_id=None):
@@ -41,6 +51,12 @@ class ProductProduct(models.Model):
             return self.browse()
 
         barcode = barcode.strip()
+
+        # Validate input length to prevent performance issues
+        # Max reasonable barcode length is 100 characters (for QR codes/GS1-128)
+        if len(barcode) > 100:
+            return self.browse()
+
         company_id = company_id or self.env.company.id
 
         # 1. Search primary barcode field
@@ -162,5 +178,15 @@ class ProductTemplate(models.Model):
 
     @api.depends('barcode_ids')
     def _compute_barcode_count(self):
+        """Compute barcode count using read_group for efficiency."""
+        if not self.ids:
+            return
+        # Use read_group for efficient counting (avoids N+1 queries)
+        barcode_data = self.env['product.barcode'].read_group(
+            [('product_tmpl_id', 'in', self.ids)],
+            ['product_tmpl_id'],
+            ['product_tmpl_id']
+        )
+        counts = {data['product_tmpl_id'][0]: data['product_tmpl_id_count'] for data in barcode_data}
         for template in self:
-            template.barcode_count = len(template.barcode_ids)
+            template.barcode_count = counts.get(template.id, 0)

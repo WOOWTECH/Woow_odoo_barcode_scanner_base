@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Multi-company record rules for product.barcode -->
+
+    <!-- Product Barcode: Company-based access rule -->
+    <record id="product_barcode_company_rule" model="ir.rule">
+        <field name="name">Product Barcode: Multi-Company</field>
+        <field name="model_id" ref="model_product_barcode"/>
+        <field name="domain_force">[
+            '|',
+            ('company_id', '=', False),
+            ('company_id', 'in', company_ids)
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

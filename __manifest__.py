@@ -29,6 +29,7 @@ This is the base module required by all barcode scanner integration modules.
     ],
     'data': [
         'security/ir.model.access.csv',
+        'security/ir_rules.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
     ],

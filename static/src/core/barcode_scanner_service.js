@@ -29,37 +29,19 @@ export const barcodeScannerService = {
         let scanMode = "all";
         let autoIncrement = true;
 
-        // Load settings
+        // Load settings via dedicated backend method (secure approach)
         async function loadSettings() {
             try {
-                const settings = await orm.searchRead(
-                    "ir.config_parameter",
-                    [
-                        [
-                            "key",
-                            "in",
-                            [
-                                "barcode_scanner.enable_sound",
-                                "barcode_scanner.scan_mode",
-                                "barcode_scanner.auto_increment",
-                            ],
-                        ],
-                    ],
-                    ["key", "value"]
+                const settings = await orm.call(
+                    "barcode.scanner.settings",
+                    "get_scanner_settings",
+                    []
                 );
 
-                for (const setting of settings) {
-                    switch (setting.key) {
-                        case "barcode_scanner.enable_sound":
-                            enableSound = setting.value !== "False";
-                            break;
-                        case "barcode_scanner.scan_mode":
-                            scanMode = setting.value || "all";
-                            break;
-                        case "barcode_scanner.auto_increment":
-                            autoIncrement = setting.value !== "False";
-                            break;
-                    }
+                if (settings) {
+                    enableSound = settings.enable_sound !== false;
+                    scanMode = settings.scan_mode || "all";
+                    autoIncrement = settings.auto_increment !== false;
                 }
             } catch (error) {
                 console.warn("Could not load barcode scanner settings:", error);

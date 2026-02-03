@@ -1,5 +1,12 @@
 /* Barcode Scanner Dialog Styles */
 
+// Scanner frame dimensions (use variables to avoid magic numbers)
+$scanner-frame-size: 250px;
+$scanner-frame-size-mobile: 200px;
+$scanner-frame-offset: $scanner-frame-size - 2px;
+$scanner-frame-offset-mobile: $scanner-frame-size-mobile - 2px;
+$scanner-accent-color: #28a745;
+
 .barcode-scanner-dialog-content {
     min-height: 400px;
 }
@@ -47,8 +54,8 @@
 }
 
 .scanner-frame {
-    width: 250px;
-    height: 250px;
+    width: $scanner-frame-size;
+    height: $scanner-frame-size;
     position: relative;
 
     /* Corner markers */
@@ -58,7 +65,7 @@
         position: absolute;
         width: 30px;
         height: 30px;
-        border-color: #28a745;
+        border-color: $scanner-accent-color;
         border-style: solid;
     }
 
@@ -82,7 +89,7 @@
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #28a745, transparent);
+    background: linear-gradient(90deg, transparent, $scanner-accent-color, transparent);
     animation: scan-line 2s ease-in-out infinite;
 
     &::before,
@@ -91,18 +98,18 @@
         position: absolute;
         width: 30px;
         height: 30px;
-        border-color: #28a745;
+        border-color: $scanner-accent-color;
         border-style: solid;
     }
 
     &::before {
-        bottom: -248px;
+        bottom: -$scanner-frame-offset;
         left: 0;
         border-width: 0 0 3px 3px;
     }
 
     &::after {
-        bottom: -248px;
+        bottom: -$scanner-frame-offset;
         right: 0;
         border-width: 0 3px 3px 0;
     }
@@ -113,7 +120,7 @@
         top: 0;
     }
     50% {
-        top: 248px;
+        top: $scanner-frame-offset;
     }
 }
 
@@ -153,14 +160,14 @@
     }
 
     .scanner-frame {
-        width: 200px;
-        height: 200px;
+        width: $scanner-frame-size-mobile;
+        height: $scanner-frame-size-mobile;
     }
 
     .scanner-frame .scanner-line {
         &::before,
         &::after {
-            bottom: -198px;
+            bottom: -$scanner-frame-offset-mobile;
         }
     }
 
@@ -169,7 +176,7 @@
             top: 0;
         }
         50% {
-            top: 198px;
+            top: $scanner-frame-offset-mobile;
         }
     }
 }

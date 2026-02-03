@@ -54,6 +54,8 @@ async function loadHtml5QrcodeLibrary() {
         };
 
         script.onerror = () => {
+            // Reset promise to allow retry on failure
+            libraryLoadingPromise = null;
             reject(new Error('Failed to load html5-qrcode library'));
         };
 
@@ -98,7 +100,8 @@ export class BarcodeScannerDialog extends Component {
         });
 
         this.scanner = null;
-        this.scannerContainerId = "barcode-scanner-container";
+        // Generate unique container ID to prevent conflicts
+        this.scannerContainerId = `barcode-scanner-container-${Date.now()}`;
 
         onMounted(() => this.initScanner());
         onWillUnmount(() => this.destroyScanner());

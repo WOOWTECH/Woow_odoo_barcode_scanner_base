@@ -1,9 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Barcode Scanner Settings -->
-    <!-- Settings are configured through the res.config.settings model -->
-    <!-- The fields are defined in models/res_config_settings.py -->
-
-    <!-- Note: The actual settings UI integration depends on which apps are installed -->
-    <!-- Users can access barcode settings through the individual module configurations -->
+    <!-- Barcode Scanner Settings - Extend Stock Settings -->
+    <record id="res_config_settings_view_form_barcode_scanner" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.barcode.scanner</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='stock']" position="inside">
+                <block title="Barcode Scanner" name="barcode_scanner_settings">
+                    <setting id="barcode_scan_mode_setting" string="Scan Mode">
+                        <field name="barcode_scan_mode"/>
+                    </setting>
+                    <setting id="barcode_default_type_setting" string="Default Barcode Type">
+                        <field name="barcode_default_type"/>
+                    </setting>
+                    <setting id="barcode_enable_sound_setting" string="Sound Feedback">
+                        <field name="barcode_enable_sound"/>
+                    </setting>
+                    <setting id="barcode_auto_increment_setting" string="Auto-Increment Quantity">
+                        <field name="barcode_auto_increment"/>
+                        <div class="text-muted">
+                            Automatically increment quantity when scanning the same product multiple times
+                        </div>
+                    </setting>
+                    <setting id="barcode_show_stock_info_setting" string="Show Stock Info">
+                        <field name="barcode_show_stock_info"/>
+                        <div class="text-muted">
+                            Display on-hand quantity when scanning a product
+                        </div>
+                    </setting>
+                    <setting id="barcode_camera_preference_setting" string="Camera Preference">
+                        <field name="barcode_camera_preference"/>
+                    </setting>
+                    <setting id="barcode_scan_delay_setting" string="Scan Delay (ms)">
+                        <field name="barcode_scan_delay_ms"/>
+                        <div class="text-muted">
+                            Minimum delay between consecutive scans to prevent duplicates
+                        </div>
+                    </setting>
+                    <setting id="barcode_enable_gs1_setting" string="GS1-128 Parsing">
+                        <field name="barcode_enable_gs1_parsing"/>
+                        <div class="text-muted">
+                            Automatically parse GS1-128 barcodes to extract lot, serial, expiry, etc.
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
 </odoo>

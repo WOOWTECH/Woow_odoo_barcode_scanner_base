@@ -26,7 +26,7 @@
                 <div t-att-class="{'d-none': state.isInitializing || state.error}">
                     <!-- Camera Preview -->
                     <div class="scanner-preview-container mb-3">
-                        <div id="barcode-scanner-container" class="scanner-preview"/>
+                        <div t-att-id="scannerContainerId" class="scanner-preview"/>
 
                         <!-- Scanning Indicator -->
                         <t t-if="state.isScanning">

@@ -66,9 +66,31 @@ class ProductBarcode(models.Model):
     )
 
     _sql_constraints = [
-        ('barcode_unique', 'UNIQUE(name, company_id)',
+        ('barcode_company_unique', 'UNIQUE(name, company_id)',
          'A barcode must be unique per company!'),
     ]
+
+    @api.constrains('name', 'company_id')
+    def _check_barcode_unique_global(self):
+        """Ensure global barcodes (company_id=False) are unique.
+
+        PostgreSQL UNIQUE constraint treats NULL as distinct values,
+        so we need a Python constraint to enforce uniqueness for global barcodes.
+        """
+        for record in self:
+            if record.company_id:
+                continue  # Company-specific barcodes are handled by SQL constraint
+
+            # Check for duplicate global barcodes
+            duplicates = self.search([
+                ('name', '=', record.name),
+                ('company_id', '=', False),
+                ('id', '!=', record.id),
+            ], limit=1)
+            if duplicates:
+                raise ValidationError(
+                    _("A global barcode '%s' already exists!") % record.name
+                )
 
     @api.constrains('name', 'barcode_type')
     def _check_barcode_format(self):
@@ -168,9 +190,7 @@ class ProductBarcode(models.Model):
             domain.append(('company_id', '=', False))
         return self.search(domain, limit=1)
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
+        """Compute display name with barcode type."""
         for record in self:
-            name = f"{record.name} ({record.barcode_type})"
-            result.append((record.id, name))
-        return result
+            record.display_name = f"{record.name} ({record.barcode_type})"

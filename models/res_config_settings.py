@@ -2,6 +2,34 @@
 from odoo import api, fields, models
 
 
+class BarcodeScannerSettings(models.AbstractModel):
+    """Abstract model to provide barcode scanner settings to frontend."""
+    _name = 'barcode.scanner.settings'
+    _description = 'Barcode Scanner Settings Provider'
+
+    @api.model
+    def get_scanner_settings(self):
+        """Get barcode scanner settings for frontend use.
+
+        This method provides a secure way to access scanner settings
+        without directly querying ir.config_parameter from JavaScript.
+
+        Returns:
+            dict with scanner settings
+        """
+        ICP = self.env['ir.config_parameter'].sudo()
+        return {
+            'enable_sound': ICP.get_param('barcode_scanner.enable_sound', 'True') != 'False',
+            'scan_mode': ICP.get_param('barcode_scanner.scan_mode', 'all'),
+            'auto_increment': ICP.get_param('barcode_scanner.auto_increment', 'True') != 'False',
+            'camera_preference': ICP.get_param('barcode_scanner.camera_preference', 'back'),
+            'scan_delay_ms': int(ICP.get_param('barcode_scanner.scan_delay', '500') or 500),
+            'enable_gs1_parsing': ICP.get_param('barcode_scanner.enable_gs1', 'True') != 'False',
+            'default_type': ICP.get_param('barcode_scanner.default_type', 'ean13'),
+            'show_stock_info': ICP.get_param('barcode_scanner.show_stock_info', 'True') != 'False',
+        }
+
+
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 

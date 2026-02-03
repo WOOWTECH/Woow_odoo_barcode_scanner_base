@@ -22,7 +22,7 @@ Supported AIs:
 """
 
 from datetime import datetime
-from odoo import api, models, _
+from odoo import api, models
 
 
 class GS1Parser(models.AbstractModel):
@@ -206,7 +206,10 @@ class GS1Parser(models.AbstractModel):
                 fixed_length = ai_def.get('length')
 
                 if fixed_length:
-                    # Fixed length AI
+                    # Fixed length AI - validate remaining length
+                    if len(remaining) < value_start + fixed_length:
+                        # Not enough characters for fixed-length AI
+                        return (None, None, start_pos)
                     value = remaining[value_start:value_start + fixed_length]
                     new_pos = start_pos + ai_length + fixed_length
                 else:
